@@ -1,2 +1,2 @@
-/*! (C) WebReflection Mit Style License */
-var main={};
+/*! (C) Andrea Giammarchi Mit Style License */
+function HoldOn(e){this._cache={},this._keys=e||["result"]}HoldOn.create=function(t){return new HoldOn(t)},function(e){function n(e){var n=!t.call(this._cache,e),r=n?[]:this._cache[e],i=this._keys.length,s=0;if(n){this._cache[e]=r;while(s<i)r[s++]=[];s=0}while(s<i)r[s].push(arguments[++s]);return n}function r(e){var t={},n=this._cache[e],r=this._keys,i=r.length,s=0;while(s<i)t[r[s]]=n[s++];return t}function i(e){return t.call(this._cache,e)}function s(e){var t=r.call(this,e);return delete this._cache[e],t}var t=e.hasOwnProperty;e.add=n,e.get=r,e.has=i,e.remove=s}(HoldOn.prototype);

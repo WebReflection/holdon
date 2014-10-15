@@ -1,13 +1,21 @@
 {
-  "version": "0.0.0",
+  "version": "0.1.0",
   "license": "MIT",
   "name": "holdon",
   "description": "",
   "homepage": "https://github.com/WebReflection/holdon",
-  "keywords": [],
+  "keywords": [
+    "async",
+    "asynchronous",
+    "cache",
+    "group",
+    "keys",
+    "performance",
+    "lists"
+  ],
   "author": {
-    "name": "",
-    "web": ""
+    "name": "Andrea Giammarchi",
+    "web": "http://webreflection.blogspot.com/"
   },
   "repository": {
     "type": "git",
@@ -17,7 +25,7 @@
   "scripts": {
     "test": "node test/.test.js"
   },
-  "dependencies": {
+  "devDependencies": {
     "wru": ">= 0.0.0"
   }
 }
