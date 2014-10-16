@@ -20,27 +20,22 @@ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
 
 */
-HoldOn.create = function create(keys) {
-  return new HoldOn(keys);
-};
-
 function HoldOn(keys) {
   this._cache = {};
   this._keys = keys || ['result'];
 }
 
-(function (HoldOnPrototype) {
+(function (HoldOnPrototype, hOP) {
 
-  var hOP = HoldOnPrototype.hasOwnProperty;
+  // @public static
+  HoldOn.create = function create(keys) {
+    return new HoldOn(keys);
+  };
 
-  HoldOnPrototype.add = add;
-  HoldOnPrototype.get = get;
-  HoldOnPrototype.has = has;
-  HoldOnPrototype.remove = remove;
-
-  function add(id) {
+  // @public prototype
+  HoldOnPrototype.add = function add(id) {
     var
-      isNew = !hOP.call(this._cache, id),
+      isNew = !this.has(id),
       list = isNew ? [] : this._cache[id],
       length = this._keys.length,
       i = 0
@@ -52,9 +47,9 @@ function HoldOn(keys) {
     }
     while (i < length) list[i].push(arguments[++i]);
     return isNew;
-  }
+  };
 
-  function get(id) {
+  HoldOnPrototype.get = function get(id) {
     var
       object = {},
       list = this._cache[id],
@@ -64,16 +59,16 @@ function HoldOn(keys) {
     ;
     while (i < length) object[keys[i]] = list[i++];
     return object;
-  }
+  };
 
-  function has(id) {
+  HoldOnPrototype.has = function has(id) {
     return hOP.call(this._cache, id);
-  }
+  };
 
-  function remove(id) {
-    var object = get.call(this, id);
+  HoldOnPrototype.remove = function remove(id) {
+    var object = this.get(id);
     delete this._cache[id];
     return object;
-  }
+  };
 
-}(HoldOn.prototype));
+}(HoldOn.prototype, {}.hasOwnProperty));
