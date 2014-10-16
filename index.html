@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print">
+
+    <title>Holdon by WebReflection</title>
+  </head>
+
+  <body>
+
+    <header>
+      <div class="container">
+        <h1>Holdon</h1>
+        <h2>A simple unique key based cache</h2>
+
+        <section id="downloads">
+          <a href="https://github.com/WebReflection/holdon/zipball/master" class="btn">Download as .zip</a>
+          <a href="https://github.com/WebReflection/holdon/tarball/master" class="btn">Download as .tar.gz</a>
+          <a href="https://github.com/WebReflection/holdon" class="btn btn-github"><span class="icon"></span>View on GitHub</a>
+        </section>
+      </div>
+    </header>
+
+    <div class="container">
+      <section id="main_content">
+        <h1>
+<a name="holdon" class="anchor" href="#holdon"><span class="octicon octicon-link"></span></a>holdon</h1>
+
+<p><a href="http://travis-ci.org/WebReflection/holdon"><img src="https://secure.travis-ci.org/WebReflection/holdon.png" alt="build status"></a></p>
+
+<h1>
+<a name="a-simple-unique-key-based-cache" class="anchor" href="#a-simple-unique-key-based-cache"><span class="octicon octicon-link"></span></a>A simple unique key based cache</h1>
+
+<p>Specially handy in all those situations where one unique id can perform an asynchronous action you don't want to drop the first time is called but you want to store all listeners waiting for such result.</p>
+
+<div class="highlight highlight-js"><pre><span class="c1">// module: filereader</span>
+<span class="kd">var</span> <span class="nx">fs</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'fs'</span><span class="p">);</span>
+
+<span class="c1">// a generic module cache</span>
+<span class="c1">// with a callback property</span>
+<span class="kd">var</span> <span class="nx">cache</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'holdon'</span><span class="p">).</span><span class="nx">create</span><span class="p">([</span><span class="s1">'callback'</span><span class="p">]);</span>
+
+<span class="kd">function</span> <span class="nx">onFileRead</span><span class="p">(</span><span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+  <span class="nx">callback</span><span class="p">.</span><span class="nx">call</span><span class="p">(</span><span class="kc">null</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">err</span><span class="p">,</span> <span class="k">this</span><span class="p">.</span><span class="nx">res</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="nx">module</span><span class="p">.</span><span class="nx">exports</span> <span class="o">=</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">path</span><span class="p">,</span> <span class="nx">callback</span><span class="p">)</span> <span class="p">{</span>
+  <span class="k">if</span> <span class="p">(</span><span class="o">!</span><span class="nx">cache</span><span class="p">.</span><span class="nx">has</span><span class="p">(</span><span class="nx">path</span><span class="p">))</span> <span class="p">{</span>
+    <span class="nx">fs</span><span class="p">.</span><span class="nx">readFile</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+      <span class="kd">var</span> <span class="nx">result</span> <span class="o">=</span> <span class="nx">cache</span><span class="p">.</span><span class="nx">get</span><span class="p">(</span><span class="nx">path</span><span class="p">);</span>
+      <span class="c1">// clean this id</span>
+      <span class="nx">cache</span><span class="p">.</span><span class="nx">remove</span><span class="p">(</span><span class="nx">path</span><span class="p">);</span>
+      <span class="c1">// invoke all waiting callbacks</span>
+      <span class="nx">result</span><span class="p">.</span><span class="nx">callback</span><span class="p">.</span><span class="nx">forEach</span><span class="p">(</span><span class="nx">onFileRead</span><span class="p">,</span> <span class="p">{</span><span class="nx">err</span><span class="o">:</span> <span class="nx">err</span><span class="p">,</span> <span class="nx">res</span><span class="o">:</span> <span class="nx">res</span><span class="p">});</span>
+    <span class="p">});</span>
+  <span class="p">}</span>
+  <span class="c1">// add the path to the queue</span>
+  <span class="nx">cache</span><span class="p">.</span><span class="nx">add</span><span class="p">(</span><span class="nx">path</span><span class="p">,</span> <span class="nx">callback</span><span class="p">);</span>
+<span class="p">};</span>
+</pre></div>
+
+<p>In another file ...</p>
+
+<div class="highlight highlight-js"><pre><span class="kd">var</span> <span class="nx">filereader</span> <span class="o">=</span> <span class="nx">require</span><span class="p">(</span><span class="s1">'filereader'</span><span class="p">);</span>
+
+<span class="c1">// whenever is needed</span>
+<span class="nx">filereader</span><span class="p">(</span><span class="s1">'anyFile.md'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// do something ...</span>
+<span class="p">});</span>
+
+<span class="nx">filereader</span><span class="p">(</span><span class="s1">'anyFile.md'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// do something ...</span>
+<span class="p">});</span>
+
+<span class="nx">filereader</span><span class="p">(</span><span class="s1">'anyFile.md'</span><span class="p">,</span> <span class="kd">function</span> <span class="p">(</span><span class="nx">err</span><span class="p">,</span> <span class="nx">res</span><span class="p">)</span> <span class="p">{</span>
+  <span class="c1">// do something ...</span>
+<span class="p">});</span>
+
+<span class="c1">// it does not matter how many asking, the disk will read it once</span>
+</pre></div>
+      </section>
+    </div>
+
+    
+  </body>
+</html>
