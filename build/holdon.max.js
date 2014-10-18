@@ -22,7 +22,7 @@ THE SOFTWARE.
 */
 function HoldOn(keys) {
   this._cache = {};
-  this._keys = keys || ['result'];
+  this._keys = keys || ['values'];
 }
 
 (function (HoldOnPrototype, hOP) {

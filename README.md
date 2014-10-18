@@ -53,3 +53,18 @@ filereader('anyFile.md', function (err, res) {
 
 // it does not matter how many asking, the disk will read it once
 ```
+
+### Simplified API for common cases
+```js
+module.exports = function (path, callback) {
+  // true only if created first time
+  if (cache.add(path, callback)) {
+    fs.readFile(path, function (err, res) {
+      // remove returns the object too
+      cache.remove(path).callback.forEach(
+        onFileRead, {err: err, res: res}
+      );
+    });
+  }
+};
+```

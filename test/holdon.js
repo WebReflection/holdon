@@ -42,5 +42,19 @@ wru.test([
         JSON.stringify(cache.get(keyB)) === '{"a":[3],"b":[4]}'
       );
     }
+  }, {
+    name: 'shortcuts',
+    test: function () {
+      var cache = HoldOn.create();
+      var uinqueId = Math.random();
+      wru.assert('creation time', cache.add(uinqueId, 1));
+      wru.assert('after creation time', !cache.add(uinqueId, 2));
+      var got = JSON.stringify(cache.get(uinqueId));
+      wru.assert('remove and get',
+        JSON.stringify(cache.remove(uinqueId)) === got &&
+        got === '{"values":[1,2]}'
+      );
+      wru.assert('actually removed', !cache.has(uinqueId));
+    }
   }
 ]);
