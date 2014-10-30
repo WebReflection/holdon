@@ -1,15 +1,15 @@
 {
-  "version": "0.2.0",
+  "version": "0.2.1",
   "license": "MIT",
   "name": "holdon",
-  "description": "",
+  "description": "A simple, non atomic, unique key/values based cache",
   "homepage": "https://github.com/WebReflection/holdon",
   "keywords": [
     "async",
     "asynchronous",
     "cache",
-    "group",
     "keys",
+    "values",
     "performance",
     "lists"
   ],

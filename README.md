@@ -3,7 +3,7 @@ holdon
 
 [![build status](https://secure.travis-ci.org/WebReflection/holdon.png)](http://travis-ci.org/WebReflection/holdon)
 
-# A simple unique key based cache
+# A simple, non atomic, unique key/values based cache
 
 Specially handy in all those situations where one unique id can perform an asynchronous action you don't want to drop the first time is called but you want to store all listeners waiting for such result.
 
@@ -20,6 +20,10 @@ module.exports = function (path, callback) {
     });
   }
 };
+
+function onFileRead(callback) {
+  callback.call(null, this.err, this.res);
+}
 ```
 
 ### Full API example
