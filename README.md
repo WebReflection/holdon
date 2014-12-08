@@ -5,7 +5,7 @@ holdon
 
 # A simple, non atomic, unique key/values based cache
 
-Specially handy in all those situations where one unique id can perform an asynchronous action you don't want to drop the first time is called but you want to store all listeners waiting for such result.
+Specially handy in all those situations where one unique id can perform an asynchronous action you don't want to drop the first time is called but you want to store all listeners waiting for such result. Here’s a good explanation: <http://calendar.perfplanet.com/2014/boosting-io-holding-requests/>.
 
 ### Simplified API for common cases
 ```js
